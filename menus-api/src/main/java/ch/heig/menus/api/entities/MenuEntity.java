@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity(name = "Quote")
 @Table(name = "quotes")
-public class QuoteEntity {
+public class MenuEntity {
     @TableGenerator(name = "genQuotes",
             table = "idQuotes",
             pkColumnName = "name",
@@ -18,9 +18,9 @@ public class QuoteEntity {
     private String author;
     private String citation;
 
-    public QuoteEntity() {}
+    public MenuEntity() {}
 
-    public QuoteEntity(int id, String author, String citation) {
+    public MenuEntity(int id, String author, String citation) {
         this.id = id;
         this.author = author;
         this.citation = citation;

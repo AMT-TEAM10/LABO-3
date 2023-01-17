@@ -84,7 +84,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${basedir}/src/main/resources/quotes.yaml</inputSpec>
+                            <inputSpec>${basedir}/src/main/resources/menus.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>

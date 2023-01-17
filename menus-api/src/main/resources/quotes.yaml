@@ -85,4 +85,4 @@ components:
           description: numéro auto-incrémenté de la citation
           type: integer
           format: int32
-      title: Quote
+      title: Menu
