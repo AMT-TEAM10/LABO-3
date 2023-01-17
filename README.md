@@ -1,4 +1,21 @@
-# quotes-exemple
+# API de gestion de menus
+
+Le but de notre API est de permettre la maintenance d'un menu de la semaine pour un restaurant.
+Les actions possibles sont la création, l'édition et la suppression de menus.
+
+# Documentation de l'API
+
+La documentation Swagger des endpoints de l'API est accessible ici: http://localhost:9090/api
+
+
+# Vidéo de présentation
+
+Lien de la vidéo: TODO
+
+
+
+
+<!--# quotes-exemple
 Mise en oeuvre d'une api avec Springboot et d'un client de test BDD avec Cucumber 
 Avec OpenApi generator, génération à partir d'un fichier OpenAPI "quotes.yaml" :
  - des intertaces et des DTO pour Springboot
@@ -35,4 +52,4 @@ Avec OpenApi generator, génération à partir d'un fichier OpenAPI "quotes.yaml
     - Développer ou adapter les features Cucumber et les steps pour les nouvelles fonctionalités
     - Exécuter les tests sous IntelliJ et relancer "maven clean package" de quotes-spec pour exécuter les tests avec Maven
   
-    
+    -->
