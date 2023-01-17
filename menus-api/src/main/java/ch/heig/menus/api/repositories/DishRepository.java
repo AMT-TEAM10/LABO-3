@@ -6,9 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-//TODO SET THE CORRECT TYPE ENTITY
 @Repository
 public interface DishRepository extends JpaRepository<MenuEntity, Integer> {
     MenuEntity findById(int id);
-    // List<MenuEntity> findByAuthorLike(String pattern);
+    List<MenuEntity> findByByNameLike(String pattern);
 }
