@@ -6,15 +6,15 @@ info:
 servers:
   - url: 'http://localhost:9090/api'
 tags:
-  - name: Quotes-end-point
-    description: Gestion des quotes
+  - name: Menus-end-point
+    description: Gestion des menus
 paths:
-  /quotes:
+  /menus:
     get:
       tags:
-        - Quotes-end-point
-      summary: Obtient une liste de toutes les quotes
-      operationId: getQuotes
+        - Menus-end-point
+      summary: Obtient une liste de toutes les menus
+      operationId: getMenus
       responses:
         '200':
           description: OK
@@ -23,38 +23,38 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Quote'
+                  $ref: '#/components/schemas/Menu'
         '404':
           description: Not Found
     post:
       tags:
-        - Quotes-end-point
-      summary: Ajoute une nouvelle quote
-      operationId: addQuote
+        - Menus-end-point
+      summary: Ajoute une nouvelle menu
+      operationId: addMenu
       requestBody:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Quote'
+              $ref: '#/components/schemas/Menu'
       responses:
         '201':
-          description: quote crée
+          description: menu crée
           headers:
             Location:
-              description: URL de la quote crée
+              description: URL de la menu crée
               schema:
                 type: string
                 format: uri
-  /quotes/{id}:
+  /menus/{id}:
     get:
       tags:
-        - Quotes-end-point
-      summary: Obtient une quote
-      operationId: getQuote
+        - Menus-end-point
+      summary: Obtient une menu
+      operationId: getMenu
       parameters:
         - name: id
           in: path
-          description: numéro de la quote à obtenir
+          description: numéro de la menu à obtenir
           required: true
           schema:
             type: integer
@@ -65,14 +65,14 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/Quote'
+                $ref: '#/components/schemas/Menu'
         '404':
           description: Not Found
       deprecated: false
 components:
   schemas:
-    Quote:
-      description: toutes les caractéristiques d'une quote
+    Menu:
+      description: toutes les caractéristiques d'une menu
       type: object
       properties:
         author:

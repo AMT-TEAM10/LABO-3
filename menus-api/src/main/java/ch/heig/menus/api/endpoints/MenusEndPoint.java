@@ -1,7 +1,7 @@
 package ch.heig.menus.api.endpoints;
 
-import org.openapitools.api.QuotesApi;
 import ch.heig.menus.api.exceptions.MenuNotFoundException;
+import org.openapitools.api.MenusApi;
 import org.openapitools.model.Menu;
 import ch.heig.menus.api.entities.MenuEntity;
 import ch.heig.menus.api.repositories.MenuRepository;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class MenusEndPoint implements QuotesApi {
+public class MenusEndPoint implements MenusApi {
 
     @Autowired
     private MenuRepository menuRepository;
