@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MenuRepository extends JpaRepository<MenuEntity, Integer> {
+public interface ChefRepository extends JpaRepository<ChefRepository, Integer> {
     MenuEntity findById(int id);
-    List<MenuEntity> findByByNameLike(String pattern);
+    List<ChefRepository> findByByNameLike(String pattern);
 }
