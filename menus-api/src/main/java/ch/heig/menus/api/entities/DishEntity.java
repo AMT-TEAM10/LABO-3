@@ -2,14 +2,19 @@ package ch.heig.menus.api.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity(name = "Dish")
-@Table(name = "dishes")
+@Table(name = "dish")
 public class DishEntity {
     @Id
     @GeneratedValue
     private int id;
 
     private String name;
+
+    @ManyToMany
+    private List<ChefEntity> chefs;
 
     public DishEntity() {}
 

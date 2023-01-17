@@ -4,7 +4,7 @@ package ch.heig.menus.api.entities;
 import jakarta.persistence.*;
 
 @Entity(name = "Menu")
-@Table(name = "menus")
+@Table(name = "menu")
 public class MenuEntity {
 
     @Id

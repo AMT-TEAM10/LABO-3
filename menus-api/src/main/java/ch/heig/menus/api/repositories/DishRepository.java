@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface DishRepository extends JpaRepository<MenuEntity, Integer> {
     MenuEntity findById(int id);
-    List<MenuEntity> findByAuthorLike(String pattern);}
+    // List<MenuEntity> findByAuthorLike(String pattern);
+}
