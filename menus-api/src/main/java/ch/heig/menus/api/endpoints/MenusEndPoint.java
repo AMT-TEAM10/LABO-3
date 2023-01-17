@@ -1,9 +1,9 @@
 package ch.heig.menus.api.endpoints;
 
+import ch.heig.menus.api.entities.MenuEntity;
 import ch.heig.menus.api.exceptions.MenuNotFoundException;
 import org.openapitools.api.MenusApi;
 import org.openapitools.model.Menu;
-import ch.heig.menus.api.entities.MenuEntity;
 import ch.heig.menus.api.repositories.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,6 @@ public class MenusEndPoint implements MenusApi {
 
     @Override
     public ResponseEntity<List<Menu>> getMenus() {
-        /*
         List<MenuEntity> quoteEntities= menuRepository.findAll();
         List<Menu> menus = new ArrayList<>();
         for (MenuEntity menuEntity : quoteEntities) {
@@ -33,17 +32,13 @@ public class MenusEndPoint implements MenusApi {
             menu.setId(menuEntity.getId());
             menus.add(menu);
         }
-        return new ResponseEntity<List<Menu>>(menus,HttpStatus.OK);
-        */
-        return null;
+        return new ResponseEntity<>(menus, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> addMenu(@RequestBody Menu menu) {
-        /*
         MenuEntity menuEntity = new MenuEntity();
-        menuEntity.setAuthor(menu.getAuthor());
-        menuEntity.setCitation(menu.getCitation());
+        menuEntity.setName(menu.getName());
         MenuEntity quoteAdded = menuRepository.save(menuEntity);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -51,27 +46,19 @@ public class MenusEndPoint implements MenusApi {
                 .buildAndExpand(quoteAdded.getId())
                 .toUri();
         return ResponseEntity.created(uri).build();
-         */
-        return null;
     }
 
     @Override
     public ResponseEntity<Menu> getMenu(Integer id) {
-        /*
         Optional<MenuEntity> opt = menuRepository.findById(id);
         if (opt.isPresent()) {
             MenuEntity menuEntity = opt.get();
             Menu menu = new Menu();
             menu.setId(menuEntity.getId());
-            menu.setAuthor(menuEntity.getAuthor());
-            menu.setCitation(menuEntity.getCitation());
-            return new ResponseEntity<Menu>(menu, HttpStatus.OK);
+            menu.setName(menuEntity.getName());
+            return new ResponseEntity<>(menu, HttpStatus.OK);
         } else {
-//            return ResponseEntity.notFound().build();
             throw new MenuNotFoundException(id);
         }
-         */
-        return null;
     }
-
 }

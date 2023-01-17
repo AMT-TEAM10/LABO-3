@@ -71,18 +71,39 @@ paths:
       deprecated: false
 components:
   schemas:
-    Menu:
-      description: toutes les caractéristiques d'une menu
+    Dish:
+      title: Dish
+      description: toutes les informations d'un plat
       type: object
       properties:
-        author:
-          description: nom de l'auteur
-          type: string
-        citation:
-          description: phrase de la citation
-          type: string
         id:
-          description: numéro auto-incrémenté de la citation
+          description: numéro auto-incrémenté du plat
           type: integer
           format: int32
+        name:
+          description: nom du plat
+          type: string
+    Menu:
       title: Menu
+      description: toutes les caractéristiques d'un menu
+      type: object
+      properties:
+        id:
+          description: numéro auto-incrémenté du menu
+          type: integer
+          format: int32
+        name:
+          description: nom du menu
+          type: string
+    Chef:
+      title: Chef
+      description: toutes les caractéristiques d'un chef
+      type: object
+      properties:
+        id:
+          description: numéro auto-incrémenté du chef
+          type: integer
+          format: int32
+        name:
+          description: nom du chef
+          type: string
