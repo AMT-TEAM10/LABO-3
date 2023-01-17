@@ -3,27 +3,31 @@ package ch.heig.menus.api.entities;
 
 import jakarta.persistence.*;
 
-@Entity(name = "Quote")
-@Table(name = "quotes")
+@Entity(name = "Menu")
+@Table(name = "menus")
 public class MenuEntity {
-    @TableGenerator(name = "genQuotes",
-            table = "idQuotes",
-            pkColumnName = "name",
-            valueColumnName = "val",
-            initialValue = 3,
-            allocationSize = 100)
-    @Id // @GeneratedValue
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "genQuotes")
+
+    @Id
+    @GeneratedValue
     private int id;
-    private String author;
-    private String citation;
+
+    @ManyToOne
+    // @JoinColumn(name = "dish_id", foreignKey = @ForeignKey(name = "id"))
+    private DishEntity starter;
+
+    @ManyToOne
+    private DishEntity main;
+
+    @ManyToOne
+    private DishEntity dessert;
 
     public MenuEntity() {}
 
-    public MenuEntity(int id, String author, String citation) {
+    public MenuEntity(int id, DishEntity starter, DishEntity main, DishEntity dessert) {
         this.id = id;
-        this.author = author;
-        this.citation = citation;
+        this.starter = starter;
+        this.main = main;
+        this.dessert = dessert;
     }
 
     public int getId() {
@@ -32,21 +36,5 @@ public class MenuEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getCitation() {
-        return citation;
-    }
-
-    public void setCitation(String citation) {
-        this.citation = citation;
     }
 }

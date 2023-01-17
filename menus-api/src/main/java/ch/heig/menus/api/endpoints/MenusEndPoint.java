@@ -25,20 +25,22 @@ public class MenusEndPoint implements MenusApi {
 
     @Override
     public ResponseEntity<List<Menu>> getMenus() {
+        /*
         List<MenuEntity> quoteEntities= menuRepository.findAll();
         List<Menu> menus = new ArrayList<>();
         for (MenuEntity menuEntity : quoteEntities) {
             Menu menu = new Menu();
             menu.setId(menuEntity.getId());
-            menu.setAuthor(menuEntity.getAuthor());
-            menu.setCitation(menuEntity.getCitation());
             menus.add(menu);
         }
         return new ResponseEntity<List<Menu>>(menus,HttpStatus.OK);
+        */
+        return null;
     }
 
     @Override
     public ResponseEntity<Void> addMenu(@RequestBody Menu menu) {
+        /*
         MenuEntity menuEntity = new MenuEntity();
         menuEntity.setAuthor(menu.getAuthor());
         menuEntity.setCitation(menu.getCitation());
@@ -49,10 +51,13 @@ public class MenusEndPoint implements MenusApi {
                 .buildAndExpand(quoteAdded.getId())
                 .toUri();
         return ResponseEntity.created(uri).build();
+         */
+        return null;
     }
 
     @Override
     public ResponseEntity<Menu> getMenu(Integer id) {
+        /*
         Optional<MenuEntity> opt = menuRepository.findById(id);
         if (opt.isPresent()) {
             MenuEntity menuEntity = opt.get();
@@ -65,6 +70,8 @@ public class MenusEndPoint implements MenusApi {
 //            return ResponseEntity.notFound().build();
             throw new MenuNotFoundException(id);
         }
+         */
+        return null;
     }
 
 }
