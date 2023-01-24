@@ -7,9 +7,7 @@ import ch.heig.menus.api.exceptions.MenuNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.openapitools.api.MenusApi;
 import ch.heig.menus.api.repositories.MenuRepository;
-import org.openapitools.model.ChefDTO;
-import org.openapitools.model.DishDTO;
-import org.openapitools.model.MenuDTO;
+import org.openapitools.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,16 +29,16 @@ public class MenusEndPoint implements MenusApi {
 
     private final ModelMapper modelMapper = new ModelMapper();
 
-    private MenuDTO convertToDto(MenuEntity menuEntity) {
-        var menu = modelMapper.map(menuEntity, MenuDTO.class);
+    private MenuWithRelationsDTO convertToDto(MenuEntity menuEntity) {
+        var menu = modelMapper.map(menuEntity, MenuWithRelationsDTO.class);
         menu.setDessert(convertToDto(menuEntity.getDessert()));
         menu.setMain(convertToDto(menuEntity.getMain()));
         menu.setStarter(convertToDto(menuEntity.getStarter()));
         return menu;
     }
 
-    private DishDTO convertToDto(DishEntity dishEntity) {
-        var dish = modelMapper.map(dishEntity, DishDTO.class);
+    private DishWithRelationsDTO convertToDto(DishEntity dishEntity) {
+        var dish = modelMapper.map(dishEntity, DishWithRelationsDTO.class);
         var chefs = dishEntity.getChefs().stream().map(this::convertToDto).toList();
         dish.setChefs(chefs);
         return dish;
@@ -51,32 +49,43 @@ public class MenusEndPoint implements MenusApi {
     }
 
     @Override
-    public ResponseEntity<List<MenuDTO>> getMenus() {
+    public ResponseEntity<List<MenuWithRelationsDTO>> getMenus() {
         List<MenuEntity> menusEntities = menuRepository.findAll();
-        List<MenuDTO> menusDTO = menusEntities.stream().map(this::convertToDto).toList();
-        return new ResponseEntity<>(menusDTO, HttpStatus.OK);
+        List<MenuWithRelationsDTO> menus = menusEntities.stream().map(this::convertToDto).toList();
+        return new ResponseEntity<>(menus, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> addMenu(@RequestBody MenuDTO menu) {
-        MenuEntity menuEntity = new MenuEntity();
-        menuEntity.setName(menu.getName());
-        MenuEntity quoteAdded = menuRepository.save(menuEntity);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(quoteAdded.getId())
-                .toUri();
-        return ResponseEntity.created(uri).build();
-    }
-
-    @Override
-    public ResponseEntity<MenuDTO> getMenu(Integer id) {
+    public ResponseEntity<MenuWithRelationsDTO> getMenu(Integer id) {
         Optional<MenuEntity> opt = menuRepository.findById(id);
         if (opt.isPresent()) {
             MenuEntity menuEntity = opt.get();
-            MenuDTO menu = convertToDto(menuEntity);
+            MenuWithRelationsDTO menu = convertToDto(menuEntity);
             return new ResponseEntity<>(menu, HttpStatus.OK);
+        } else {
+            throw new MenuNotFoundException(id);
+        }
+    }
+
+    @Override
+    public ResponseEntity<MenuWithRelationsDTO> createMenu(MenuDTO menuDTO) {
+        MenuEntity menuEntity = modelMapper.map(menuDTO, MenuEntity.class);
+        menuEntity = menuRepository.save(menuEntity);
+        MenuWithRelationsDTO menu = convertToDto(menuEntity);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(menu.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(menu);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteMenu(Integer id) {
+        Optional<MenuEntity> opt = menuRepository.findById(id);
+        if (opt.isPresent()) {
+            menuRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             throw new MenuNotFoundException(id);
         }

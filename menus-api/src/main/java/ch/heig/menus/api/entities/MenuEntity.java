@@ -8,29 +8,25 @@ import jakarta.persistence.*;
 public class MenuEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    @ManyToOne
-    // @JoinColumn(name = "dish_id", foreignKey = @ForeignKey(name = "id"))
+    @ManyToOne(fetch = FetchType.LAZY)
     private DishEntity starter;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private DishEntity main;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private DishEntity dessert;
 
     public MenuEntity() {}
 
-    public MenuEntity(int id, String name, DishEntity starter, DishEntity main, DishEntity dessert) {
+    public MenuEntity(int id, String name) {
         this.id = id;
         this.name = name;
-        this.starter = starter;
-        this.main = main;
-        this.dessert = dessert;
     }
 
     public int getId() {

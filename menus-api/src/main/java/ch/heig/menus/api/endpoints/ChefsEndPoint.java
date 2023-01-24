@@ -1,65 +1,62 @@
 package ch.heig.menus.api.endpoints;
 
-import ch.heig.menus.api.entities.ChefEntity;
 import ch.heig.menus.api.exceptions.ChefNotFoundException;
-import ch.heig.menus.api.repositories.ChefRepository;
-import org.modelmapper.ModelMapper;
+import ch.heig.menus.api.services.ChefsService;
 import org.openapitools.api.ChefsApi;
 import org.openapitools.model.ChefDTO;
+import org.openapitools.model.ChefWithRelationsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ChefsEndPoint implements ChefsApi {
 
-    @Autowired
-    private ChefRepository chefRepository;
+    private final ChefsService chefsService;
 
-    private final ModelMapper modelMapper = new ModelMapper();
-
-    private ChefDTO convertToDto(ChefEntity chefEntity) {
-        return modelMapper.map(chefEntity, ChefDTO.class);
+    ChefsEndPoint(@Autowired ChefsService chefsService) {
+        this.chefsService = chefsService;
     }
 
     @Override
-    public ResponseEntity<List<ChefDTO>> getChefs() {
-        List<ChefEntity> chefsEntities = chefRepository.findAll();
-        List<ChefDTO> chefsDTO = chefsEntities.stream().map(this::convertToDto).toList();
-        return new ResponseEntity<>(chefsDTO, HttpStatus.OK);
+    public ResponseEntity<List<ChefWithRelationsDTO>> getChefs() {
+        return ResponseEntity.ok(chefsService.getAll());
     }
 
     @Override
-    public ResponseEntity<Void> addChef(@RequestBody ChefDTO chef) {
-        ChefEntity chefEntity = new ChefEntity();
-        chefEntity.setName(chef.getName());
-        ChefEntity quoteAdded = chefRepository.save(chefEntity);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(quoteAdded.getId())
-                .toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<ChefWithRelationsDTO> getChef(Integer id) {
+        try {
+            return ResponseEntity.ok(chefsService.get(id));
+        } catch (ChefNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Override
-    public ResponseEntity<ChefDTO> getChef(Integer id) {
-        Optional<ChefEntity> opt = chefRepository.findById(id);
-        if (opt.isPresent()) {
-            ChefEntity chefEntity = opt.get();
-            ChefDTO chef = new ChefDTO();
-            chef.setId(chefEntity.getId());
-            chef.setName(chefEntity.getName());
-            return new ResponseEntity<>(chef, HttpStatus.OK);
-        } else {
-            throw new ChefNotFoundException(id);
+    public ResponseEntity<ChefDTO> updateChef(Integer id, ChefDTO chefDTO) {
+        try {
+            return ResponseEntity.ok(chefsService.update(id, chefDTO));
+        } catch (ChefNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<ChefDTO> createChef(ChefDTO chefDTO) {
+        var chef = chefsService.create(chefDTO);
+        return ResponseEntity.created(URI.create("/chefs/" + chef.getId())).body(chef);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteChef(Integer id) {
+        try {
+            chefsService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (ChefNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }
