@@ -1,9 +1,12 @@
 package ch.heig.menus.api.endpoints;
 
+import ch.heig.menus.api.entities.ChefEntity;
 import ch.heig.menus.api.entities.DishEntity;
 import ch.heig.menus.api.exceptions.DishNotFoundException;
 import ch.heig.menus.api.repositories.DishRepository;
+import org.modelmapper.ModelMapper;
 import org.openapitools.api.DishesApi;
+import org.openapitools.model.ChefDTO;
 import org.openapitools.model.DishDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,17 +26,17 @@ public class DishesEndPoint implements DishesApi {
     @Autowired
     private DishRepository dishRepository;
 
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    private DishDTO convertToDto(DishEntity dishEntity) {
+        return modelMapper.map(dishEntity, DishDTO.class);
+    }
+
     @Override
     public ResponseEntity<List<DishDTO>> getDishes() {
-        List<DishEntity> quoteEntities= dishRepository.findAll();
-        List<DishDTO> dishes = new ArrayList<>();
-        for (DishEntity dishEntity : quoteEntities) {
-            DishDTO dish = new DishDTO();
-            dish.setId(dishEntity.getId());
-            dish.setName(dishEntity.getName());
-            dishes.add(dish);
-        }
-        return new ResponseEntity<>(dishes, HttpStatus.OK);
+        List<DishEntity> dishesEntities = dishRepository.findAll();
+        List<DishDTO> dishesDTO = dishesEntities.stream().map(this::convertToDto).toList();
+        return new ResponseEntity<>(dishesDTO, HttpStatus.OK);
     }
 
     @Override

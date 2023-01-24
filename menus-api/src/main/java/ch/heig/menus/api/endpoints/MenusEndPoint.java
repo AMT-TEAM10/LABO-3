@@ -1,9 +1,12 @@
 package ch.heig.menus.api.endpoints;
 
+import ch.heig.menus.api.entities.DishEntity;
 import ch.heig.menus.api.entities.MenuEntity;
 import ch.heig.menus.api.exceptions.MenuNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.openapitools.api.MenusApi;
 import ch.heig.menus.api.repositories.MenuRepository;
+import org.openapitools.model.DishDTO;
 import org.openapitools.model.MenuDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,17 +26,26 @@ public class MenusEndPoint implements MenusApi {
     @Autowired
     private MenuRepository menuRepository;
 
+
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    private MenuDTO convertToDto(MenuEntity menuEntity) {
+        var menu = modelMapper.map(menuEntity, MenuDTO.class);
+        menu.setDessert(convertToDto(menuEntity.getDessert()));
+        menu.setMain(convertToDto(menuEntity.getMain()));
+        menu.setStarter(convertToDto(menuEntity.getStarter()));
+        return menu;
+    }
+
+    private DishDTO convertToDto(DishEntity dishEntity) {
+        return modelMapper.map(dishEntity, DishDTO.class);
+    }
+
     @Override
     public ResponseEntity<List<MenuDTO>> getMenus() {
-        List<MenuEntity> quoteEntities= menuRepository.findAll();
-        List<MenuDTO> menus = new ArrayList<>();
-        for (MenuEntity menuEntity : quoteEntities) {
-            MenuDTO menu = new MenuDTO();
-            menu.setId(menuEntity.getId());
-            menu.setName(menuEntity.getName());
-            menus.add(menu);
-        }
-        return new ResponseEntity<>(menus, HttpStatus.OK);
+        List<MenuEntity> menusEntities = menuRepository.findAll();
+        List<MenuDTO> menusDTO = menusEntities.stream().map(this::convertToDto).toList();
+        return new ResponseEntity<>(menusDTO, HttpStatus.OK);
     }
 
     @Override
@@ -54,9 +66,7 @@ public class MenusEndPoint implements MenusApi {
         Optional<MenuEntity> opt = menuRepository.findById(id);
         if (opt.isPresent()) {
             MenuEntity menuEntity = opt.get();
-            MenuDTO menu = new MenuDTO();
-            menu.setId(menuEntity.getId());
-            menu.setName(menuEntity.getName());
+            MenuDTO menu = convertToDto(menuEntity);
             return new ResponseEntity<>(menu, HttpStatus.OK);
         } else {
             throw new MenuNotFoundException(id);

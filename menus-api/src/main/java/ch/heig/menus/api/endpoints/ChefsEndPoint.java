@@ -3,6 +3,7 @@ package ch.heig.menus.api.endpoints;
 import ch.heig.menus.api.entities.ChefEntity;
 import ch.heig.menus.api.exceptions.ChefNotFoundException;
 import ch.heig.menus.api.repositories.ChefRepository;
+import org.modelmapper.ModelMapper;
 import org.openapitools.api.ChefsApi;
 import org.openapitools.model.ChefDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,17 +23,17 @@ public class ChefsEndPoint implements ChefsApi {
     @Autowired
     private ChefRepository chefRepository;
 
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    private ChefDTO convertToDto(ChefEntity chefEntity) {
+        return modelMapper.map(chefEntity, ChefDTO.class);
+    }
+
     @Override
     public ResponseEntity<List<ChefDTO>> getChefs() {
-        List<ChefEntity> quoteEntities= chefRepository.findAll();
-        List<ChefDTO> chefs = new ArrayList<>();
-        for (ChefEntity chefEntity : quoteEntities) {
-            ChefDTO chef = new ChefDTO();
-            chef.setId(chefEntity.getId());
-            chef.setName(chefEntity.getName());
-            chefs.add(chef);
-        }
-        return new ResponseEntity<>(chefs, HttpStatus.OK);
+        List<ChefEntity> chefsEntities = chefRepository.findAll();
+        List<ChefDTO> chefsDTO = chefsEntities.stream().map(this::convertToDto).toList();
+        return new ResponseEntity<>(chefsDTO, HttpStatus.OK);
     }
 
     @Override

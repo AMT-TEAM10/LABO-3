@@ -13,7 +13,7 @@ public class DishEntity {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany()
     private List<ChefEntity> chefs;
 
     public DishEntity() {}
@@ -41,5 +41,9 @@ public class DishEntity {
 
     public List<ChefEntity> getChefs() {
         return chefs;
+    }
+
+    public void setChefs(List<ChefEntity> chefs) {
+        this.chefs = chefs;
     }
 }

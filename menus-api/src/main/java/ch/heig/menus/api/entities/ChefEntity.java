@@ -14,6 +14,9 @@ public class ChefEntity {
     @Column()
     private String name;
 
+    @ManyToMany(mappedBy = "chefs")
+    private List<DishEntity> dishes;
+
     public int getId() {
         return id;
     }
@@ -28,5 +31,13 @@ public class ChefEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<DishEntity> getDishes() {
+        return dishes;
+    }
+
+    public void setDishes(List<DishEntity> dishes) {
+        this.dishes = dishes;
     }
 }
