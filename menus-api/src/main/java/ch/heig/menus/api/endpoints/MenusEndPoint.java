@@ -3,6 +3,7 @@ package ch.heig.menus.api.endpoints;
 import ch.heig.menus.api.entities.MenuEntity;
 import ch.heig.menus.api.exceptions.MenuNotFoundException;
 import org.openapitools.api.MenusApi;
+import org.openapitools.model.Dish;
 import org.openapitools.model.Menu;
 import ch.heig.menus.api.repositories.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class MenusEndPoint implements MenusApi {
         for (MenuEntity menuEntity : quoteEntities) {
             Menu menu = new Menu();
             menu.setId(menuEntity.getId());
+            menu.setName(menuEntity.getName());
             menus.add(menu);
         }
         return new ResponseEntity<>(menus, HttpStatus.OK);

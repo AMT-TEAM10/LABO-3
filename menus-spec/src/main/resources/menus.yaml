@@ -6,17 +6,17 @@ info:
 servers:
   - url: 'http://localhost:9090/api'
 tags:
-  - name: Menus-end-point
+  - name: menus
     description: Gestion des menus
-  - name: Dishes-end-point
+  - name: dishes
     description: Gestion des plats
-  - name: Chefs-end-point
+  - name: chefs
     description: Gestion des chefs
 paths:
   /menus:
     get:
       tags:
-        - Menus-end-point
+        - menus
       summary: Obtient une liste de toutes les menus
       operationId: getMenus
       responses:
@@ -32,7 +32,7 @@ paths:
           description: Not Found
     post:
       tags:
-        - Menus-end-point
+        - menus
       summary: Ajoute une nouvelle menu
       operationId: addMenu
       requestBody:
@@ -52,7 +52,7 @@ paths:
   /menus/{id}:
     get:
       tags:
-        - Menus-end-point
+        - menus
       summary: Obtient une menu
       operationId: getMenu
       parameters:
@@ -77,7 +77,7 @@ paths:
   /chefs:
     get:
       tags:
-        - Chefs-end-point
+        - chefs
       summary: Obtient une liste de toutes les chefs
       operationId: getChefs
       responses:
@@ -93,7 +93,7 @@ paths:
           description: Not Found
     post:
       tags:
-        - Menus-end-point
+        - menus
       summary: Ajoute un nouveau chef
       operationId: addChef
       requestBody:
@@ -113,7 +113,7 @@ paths:
   /chefs/{id}:
     get:
       tags:
-        - Chefs-end-point
+        - chefs
       summary: Obtient un chef
       operationId: getChef
       parameters:
@@ -138,7 +138,7 @@ paths:
   /dishes:
     get:
       tags:
-        - Dishes-end-point
+        - dishes
       summary: Obtient une liste de toutes les plats
       operationId: getDishes
       responses:
@@ -154,7 +154,7 @@ paths:
           description: Not Found
     post:
       tags:
-        - Dishes-end-point
+        - dishes
       summary: Ajoute un nouveau plat
       operationId: addDish
       requestBody:
@@ -174,7 +174,7 @@ paths:
   /dishes/{id}:
     get:
       tags:
-        - Dishes-end-point
+        - dishes
       summary: Obtient un plat
       operationId: getDish
       parameters:

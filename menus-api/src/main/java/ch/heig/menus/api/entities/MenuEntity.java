@@ -3,7 +3,7 @@ package ch.heig.menus.api.entities;
 
 import jakarta.persistence.*;
 
-@Entity(name = "Menu")
+@Entity()
 @Table(name = "menu")
 public class MenuEntity {
 

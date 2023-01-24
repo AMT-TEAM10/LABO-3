@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity(name = "Chef")
+@Entity()
 @Table(name = "chef")
 public class ChefEntity {
     @Id
