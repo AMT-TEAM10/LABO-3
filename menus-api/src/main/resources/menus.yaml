@@ -12,6 +12,7 @@ tags:
     description: Gestion des plats
   - name: chefs
     description: Gestion des chefs
+
 paths:
   /menus:
     get:
@@ -27,14 +28,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MenuDTO'
+                  $ref: '#/components/schemas/MenuWithRelations'
         '404':
           description: Not Found
     post:
       tags:
         - menus
-      summary: Ajoute une nouvelle menu
-      operationId: addMenu
+      summary: Ajoute un nouveau menu
+      operationId: putMenu
       requestBody:
         content:
           'application/json':
@@ -42,23 +43,24 @@ paths:
               $ref: '#/components/schemas/MenuDTO'
       responses:
         '201':
-          description: menu crée
-          headers:
-            Location:
-              description: URL de la menu crée
+          description: Created
+          content:
+            'application/json':
               schema:
-                type: string
-                format: uri
+                $ref: '#/components/schemas/MenuWithRelations'
+        '400':
+          description: Bad Request
+
   /menus/{id}:
     get:
       tags:
         - menus
-      summary: Obtient une menu
+      summary: Obtient un menu
       operationId: getMenu
       parameters:
         - name: id
           in: path
-          description: numéro de la menu à obtenir
+          description: numéro du menu à obtenir
           required: true
           schema:
             type: integer
@@ -73,6 +75,125 @@ paths:
         '404':
           description: Not Found
       deprecated: false
+    put:
+        tags:
+            - menus
+        summary: Met à jour un menu
+        operationId: updateMenu
+        parameters:
+            - name: id
+              in: path
+              description: numéro de la menu à mettre à jour
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        requestBody:
+          $ref: '#/components/requestBodies/MenuDTO'
+        responses:
+            '200':
+              description: OK
+              content:
+                'application/json':
+                  schema:
+                    $ref: '#/components/schemas/MenuDTO'
+            '400':
+             description: Bad Request
+            '404':
+             description: Not Found
+    delete:
+        tags:
+            - menus
+        summary: Supprime un menu
+        operationId: deleteMenu
+        parameters:
+            - name: id
+              in: path
+              description: numéro du menu à supprimer
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        responses:
+            '204':
+              description: OK
+            '404':
+              description: Not Found
+  /menus/{id}/{dishType}:
+    get:
+      tags:
+        - menus
+      summary: Obtient le plat du type demandé
+      operationId: getDishByType
+      parameters:
+        - name: id
+          in: path
+          description: numéro du menu
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: dishType
+          in: path
+          description: type de plat
+          required: true
+          schema:
+            type: string
+            enum:
+              - starter
+              - main
+              - dessert
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/DishDTO'
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+        tags:
+            - menus
+        summary: Ajoute ou met à jour le plat du type demandé dans le menu
+        operationId: putStarter
+        parameters:
+            - name: id
+              in: path
+              description: numéro du menu
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        requestBody:
+            content:
+                'application/json':
+                    schema:
+                        $ref: '#/components/schemas/DishDTO'
+        responses:
+          '201':
+            description: plat d'entrée crée
+          '204':
+                description: plat d'entrée mis à jour
+    delete:
+        tags:
+            - menus
+        summary: Supprime le plat du type demandé du menu
+        operationId: deleteStarter
+        parameters:
+            - name: id
+              in: path
+              description: numéro du menu
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        responses:
+            '204':
+              description: OK
+            '404':
+              description: Not Found
 
   /chefs:
     get:
@@ -93,9 +214,9 @@ paths:
           description: Not Found
     post:
       tags:
-        - menus
+        - chefs
       summary: Ajoute un nouveau chef
-      operationId: addChef
+      operationId: putChef
       requestBody:
         content:
           'application/json':
@@ -103,13 +224,13 @@ paths:
               $ref: '#/components/schemas/ChefDTO'
       responses:
         '201':
-          description: chef créé
-          headers:
-            Location:
-              description: URL du chef créé
+          description: Created
+          content:
+            'application/json':
               schema:
-                type: string
-                format: uri
+                $ref: '#/components/schemas/ChefDTO'
+        '400':
+          description: Bad Request
   /chefs/{id}:
     get:
       tags:
@@ -131,6 +252,76 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/ChefDTO'
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+        tags:
+            - chefs
+        summary: Met à jour un chef
+        operationId: updateChef
+        parameters:
+            - name: id
+              in: path
+              description: numéro du chef à mettre à jour
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        requestBody:
+          $ref: '#/components/requestBodies/ChefDTO'
+        responses:
+            '200':
+              description: OK
+              content:
+                'application/json':
+                  schema:
+                    $ref: '#/components/schemas/ChefDTO'
+            '400':
+             description: Bad Request
+            '404':
+             description: Not Found
+    delete:
+        tags:
+            - chefs
+        summary: Supprime un chef
+        operationId: deleteChef
+        parameters:
+            - name: id
+              in: path
+              description: numéro du chef à supprimer
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        responses:
+            '204':
+              description: OK
+            '404':
+              description: Not Found
+  /chefs/{id}/dishes:
+    get:
+      tags:
+        - chefs
+      summary: Obtient les plats d'un chef
+      operationId: getChefDishes
+      parameters:
+        - name: id
+          in: path
+          description: numéro du chef
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DishDTO'
         '404':
           description: Not Found
       deprecated: false
@@ -195,11 +386,129 @@ paths:
         '404':
           description: Not Found
       deprecated: false
+    put:
+        tags:
+            - dishes
+        summary: Met à jour un plat
+        operationId: updateDish
+        parameters:
+            - name: id
+              in: path
+              description: numéro du plat à mettre à jour
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        requestBody:
+          $ref: '#/components/requestBodies/DishDTO'
+        responses:
+            '200':
+              description: OK
+              content:
+                'application/json':
+                  schema:
+                    $ref: '#/components/schemas/DishDTO'
+            '400':
+             description: Bad Request
+            '404':
+             description: Not Found
+    delete:
+        tags:
+            - dishes
+        summary: Supprime un plat
+        operationId: deleteDish
+        parameters:
+            - name: id
+              in: path
+              description: numéro du plat à supprimer
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        responses:
+            '204':
+              description: OK
+            '404':
+              description: Not Found
+
+  /dishes/{id}/chefs:
+    get:
+      tags:
+        - dishes
+      summary: Obtient la liste des chefs qui ont préparé ce plat
+      operationId: getChefsByDish
+      parameters:
+        - name: id
+          in: path
+          description: numéro du plat
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChefDTO'
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+        tags:
+            - dishes
+        summary: Ajoute ou met à jour un chef qui a préparé ce plat
+        operationId: putChefByDish
+        parameters:
+            - name: id
+              in: path
+              description: numéro du plat
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        requestBody:
+            content:
+                'application/json':
+                    schema:
+                        $ref: '#/components/schemas/ChefDTO'
+        responses:
+          '201':
+            description: chef créé
+            headers:
+              Location:
+                description: URL du chef créé
+                schema:
+                  type: string
+                  format: uri
+          '204':
+            description: chef mis à jour
+    delete:
+        tags:
+            - dishes
+        summary: Supprime un chef qui a préparé ce plat
+        operationId: deleteChefByDish
+        parameters:
+            - name: id
+              in: path
+              description: numéro du plat
+              required: true
+              schema:
+                  type: integer
+                  format: int32
+        responses:
+            '204':
+              description: OK
+            '404':
+              description: Not Found
 
 components:
   schemas:
     DishDTO:
-      title: Dish
+      title: DishDTO
       description: toutes les informations d'un plat
       type: object
       properties:
@@ -210,13 +519,18 @@ components:
         name:
           description: nom du plat
           type: string
-        chefs:
-          description: liste des chefs qui ont préparé ce plat
-          type: array
-          items:
-            $ref: '#/components/schemas/ChefDTO'
+    DishWithRelationsDTO:
+      title: DishDTO with relations
+      description: toutes les informations d'un plat avec les chefs qui le préparent
+      allOf:
+        - $ref: '#/components/schemas/DishDTO'
+        - type: object
+          properties:
+            chef:
+              $ref: '#/components/schemas/ChefDTO'
+
     MenuDTO:
-      title: Menu
+      title: MenuDTO
       description: toutes les caractéristiques d'un menu
       type: object
       properties:
@@ -227,14 +541,21 @@ components:
         name:
           description: nom du menu
           type: string
-        starter:
-          $ref: '#/components/schemas/DishDTO'
-        main:
-          $ref: '#/components/schemas/DishDTO'
-        dessert:
-          $ref: '#/components/schemas/DishDTO'
+    MenuDTOWithRelations:
+      title: MenuDTO with relations
+      description: toutes les caractéristiques d'un menu avec les plats qui le composent
+      allOf:
+        - $ref: '#/components/schemas/MenuDTO'
+        - type: object
+          properties:
+            starter:
+              $ref: '#/components/schemas/DishWithRelationsDTO'
+            main:
+              $ref: '#/components/schemas/DishWithRelationsDTO'
+            dessert:
+              $ref: '#/components/schemas/DishWithRelationsDTO'
     ChefDTO:
-      title: Chef
+      title: ChefDTO
       description: toutes les caractéristiques d'un chef
       type: object
       properties:
@@ -245,3 +566,14 @@ components:
         name:
           description: nom du chef
           type: string
+    ChefWithRelationsDTO:
+      title: ChefDTO with relations
+      description: toutes les caractéristiques d'un chef avec les plats qu'il prépare
+      allOf:
+        - $ref: '#/components/schemas/ChefDTO'
+        - type: object
+      properties:
+        dishes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishDTO'
