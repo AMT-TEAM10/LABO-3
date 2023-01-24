@@ -8,6 +8,10 @@ servers:
 tags:
   - name: Menus-end-point
     description: Gestion des menus
+  - name: Dishes-end-point
+    description: Gestion des plats
+  - name: Chefs-end-point
+    description: Gestion des chefs
 paths:
   /menus:
     get:
@@ -69,6 +73,129 @@ paths:
         '404':
           description: Not Found
       deprecated: false
+
+  /chefs:
+    get:
+      tags:
+        - Chefs-end-point
+      summary: Obtient une liste de toutes les chefs
+      operationId: getChefs
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chef'
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - Menus-end-point
+      summary: Ajoute un nouveau chef
+      operationId: addChef
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Chef'
+      responses:
+        '201':
+          description: chef créé
+          headers:
+            Location:
+              description: URL du chef créé
+              schema:
+                type: string
+                format: uri
+  /chefs/{id}:
+    get:
+      tags:
+        - Chefs-end-point
+      summary: Obtient un chef
+      operationId: getChef
+      parameters:
+        - name: id
+          in: path
+          description: numéro du chef à obtenir
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Chef'
+        '404':
+          description: Not Found
+      deprecated: false
+
+  /dishes:
+    get:
+      tags:
+        - Dishes-end-point
+      summary: Obtient une liste de toutes les plats
+      operationId: getDishes
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dish'
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - Dishes-end-point
+      summary: Ajoute un nouveau plat
+      operationId: addDish
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Dish'
+      responses:
+        '201':
+          description: plat créé
+          headers:
+            Location:
+              description: URL du plat créé
+              schema:
+                type: string
+                format: uri
+  /dishes/{id}:
+    get:
+      tags:
+        - Dishes-end-point
+      summary: Obtient un plat
+      operationId: getDish
+      parameters:
+        - name: id
+          in: path
+          description: numéro du plat à obtenir
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Dish'
+        '404':
+          description: Not Found
+      deprecated: false
+
 components:
   schemas:
     Dish:
@@ -83,6 +210,11 @@ components:
         name:
           description: nom du plat
           type: string
+        chefs:
+          description: liste des chefs qui ont préparé ce plat
+          type: array
+          items:
+            $ref: '#/components/schemas/Chef'
     Menu:
       title: Menu
       description: toutes les caractéristiques d'un menu
@@ -95,6 +227,12 @@ components:
         name:
           description: nom du menu
           type: string
+        starter:
+          $ref: '#/components/schemas/Dish'
+        main:
+          $ref: '#/components/schemas/Dish'
+        dessert:
+          $ref: '#/components/schemas/Dish'
     Chef:
       title: Chef
       description: toutes les caractéristiques d'un chef

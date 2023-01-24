@@ -38,4 +38,8 @@ public class DishEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<ChefEntity> getChefs() {
+        return chefs;
+    }
 }
