@@ -13,7 +13,7 @@ public class DishEntity {
 
     private String name;
 
-    @ManyToMany()
+    @ManyToMany(mappedBy = "dishes", fetch = FetchType.LAZY)
     private List<ChefEntity> chefs;
 
     public DishEntity() {}

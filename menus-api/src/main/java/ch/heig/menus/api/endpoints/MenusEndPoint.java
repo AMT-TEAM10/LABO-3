@@ -1,11 +1,13 @@
 package ch.heig.menus.api.endpoints;
 
+import ch.heig.menus.api.entities.ChefEntity;
 import ch.heig.menus.api.entities.DishEntity;
 import ch.heig.menus.api.entities.MenuEntity;
 import ch.heig.menus.api.exceptions.MenuNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.openapitools.api.MenusApi;
 import ch.heig.menus.api.repositories.MenuRepository;
+import org.openapitools.model.ChefDTO;
 import org.openapitools.model.DishDTO;
 import org.openapitools.model.MenuDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,14 @@ public class MenusEndPoint implements MenusApi {
     }
 
     private DishDTO convertToDto(DishEntity dishEntity) {
-        return modelMapper.map(dishEntity, DishDTO.class);
+        var dish = modelMapper.map(dishEntity, DishDTO.class);
+        var chefs = dishEntity.getChefs().stream().map(this::convertToDto).toList();
+        dish.setChefs(chefs);
+        return dish;
+    }
+
+    private ChefDTO convertToDto(ChefEntity chefEntity) {
+        return modelMapper.map(chefEntity, ChefDTO.class);
     }
 
     @Override

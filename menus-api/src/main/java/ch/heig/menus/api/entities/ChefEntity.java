@@ -14,7 +14,7 @@ public class ChefEntity {
     @Column()
     private String name;
 
-    @ManyToMany(mappedBy = "chefs")
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<DishEntity> dishes;
 
     public int getId() {
