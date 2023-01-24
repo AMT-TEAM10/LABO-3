@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class MenuEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     private String name;
