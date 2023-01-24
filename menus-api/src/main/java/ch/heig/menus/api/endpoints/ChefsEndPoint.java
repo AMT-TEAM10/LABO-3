@@ -4,7 +4,7 @@ import ch.heig.menus.api.entities.ChefEntity;
 import ch.heig.menus.api.exceptions.ChefNotFoundException;
 import ch.heig.menus.api.repositories.ChefRepository;
 import org.openapitools.api.ChefsApi;
-import org.openapitools.model.Chef;
+import org.openapitools.model.ChefDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +24,11 @@ public class ChefsEndPoint implements ChefsApi {
     private ChefRepository chefRepository;
 
     @Override
-    public ResponseEntity<List<Chef>> getChefs() {
+    public ResponseEntity<List<ChefDTO>> getChefs() {
         List<ChefEntity> quoteEntities= chefRepository.findAll();
-        List<Chef> chefs = new ArrayList<>();
+        List<ChefDTO> chefs = new ArrayList<>();
         for (ChefEntity chefEntity : quoteEntities) {
-            Chef chef = new Chef();
+            ChefDTO chef = new ChefDTO();
             chef.setId(chefEntity.getId());
             chef.setName(chefEntity.getName());
             chefs.add(chef);
@@ -37,7 +37,7 @@ public class ChefsEndPoint implements ChefsApi {
     }
 
     @Override
-    public ResponseEntity<Void> addChef(@RequestBody Chef chef) {
+    public ResponseEntity<Void> addChef(@RequestBody ChefDTO chef) {
         ChefEntity chefEntity = new ChefEntity();
         chefEntity.setName(chef.getName());
         ChefEntity quoteAdded = chefRepository.save(chefEntity);
@@ -50,11 +50,11 @@ public class ChefsEndPoint implements ChefsApi {
     }
 
     @Override
-    public ResponseEntity<Chef> getChef(Integer id) {
+    public ResponseEntity<ChefDTO> getChef(Integer id) {
         Optional<ChefEntity> opt = chefRepository.findById(id);
         if (opt.isPresent()) {
             ChefEntity chefEntity = opt.get();
-            Chef chef = new Chef();
+            ChefDTO chef = new ChefDTO();
             chef.setId(chefEntity.getId());
             chef.setName(chefEntity.getName());
             return new ResponseEntity<>(chef, HttpStatus.OK);

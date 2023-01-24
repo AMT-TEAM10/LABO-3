@@ -17,7 +17,7 @@ paths:
     get:
       tags:
         - menus
-      summary: Obtient une liste de toutes les menus
+      summary: Obtient une liste de tous les menus
       operationId: getMenus
       responses:
         '200':
@@ -27,7 +27,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Menu'
+                  $ref: '#/components/schemas/MenuDTO'
         '404':
           description: Not Found
     post:
@@ -39,7 +39,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Menu'
+              $ref: '#/components/schemas/MenuDTO'
       responses:
         '201':
           description: menu crée
@@ -69,7 +69,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/Menu'
+                $ref: '#/components/schemas/MenuDTO'
         '404':
           description: Not Found
       deprecated: false
@@ -78,7 +78,7 @@ paths:
     get:
       tags:
         - chefs
-      summary: Obtient une liste de toutes les chefs
+      summary: Obtient une liste de tous les chefs
       operationId: getChefs
       responses:
         '200':
@@ -88,7 +88,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Chef'
+                  $ref: '#/components/schemas/ChefDTO'
         '404':
           description: Not Found
     post:
@@ -100,7 +100,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Chef'
+              $ref: '#/components/schemas/ChefDTO'
       responses:
         '201':
           description: chef créé
@@ -130,7 +130,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/Chef'
+                $ref: '#/components/schemas/ChefDTO'
         '404':
           description: Not Found
       deprecated: false
@@ -139,7 +139,7 @@ paths:
     get:
       tags:
         - dishes
-      summary: Obtient une liste de toutes les plats
+      summary: Obtient une liste de tous les plats
       operationId: getDishes
       responses:
         '200':
@@ -149,7 +149,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Dish'
+                  $ref: '#/components/schemas/DishDTO'
         '404':
           description: Not Found
     post:
@@ -161,7 +161,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/Dish'
+              $ref: '#/components/schemas/DishDTO'
       responses:
         '201':
           description: plat créé
@@ -191,14 +191,14 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/Dish'
+                $ref: '#/components/schemas/DishDTO'
         '404':
           description: Not Found
       deprecated: false
 
 components:
   schemas:
-    Dish:
+    DishDTO:
       title: Dish
       description: toutes les informations d'un plat
       type: object
@@ -214,8 +214,8 @@ components:
           description: liste des chefs qui ont préparé ce plat
           type: array
           items:
-            $ref: '#/components/schemas/Chef'
-    Menu:
+            $ref: '#/components/schemas/ChefDTO'
+    MenuDTO:
       title: Menu
       description: toutes les caractéristiques d'un menu
       type: object
@@ -228,12 +228,12 @@ components:
           description: nom du menu
           type: string
         starter:
-          $ref: '#/components/schemas/Dish'
+          $ref: '#/components/schemas/DishDTO'
         main:
-          $ref: '#/components/schemas/Dish'
+          $ref: '#/components/schemas/DishDTO'
         dessert:
-          $ref: '#/components/schemas/Dish'
-    Chef:
+          $ref: '#/components/schemas/DishDTO'
+    ChefDTO:
       title: Chef
       description: toutes les caractéristiques d'un chef
       type: object

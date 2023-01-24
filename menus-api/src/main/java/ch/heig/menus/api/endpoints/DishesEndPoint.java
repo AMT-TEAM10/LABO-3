@@ -4,7 +4,7 @@ import ch.heig.menus.api.entities.DishEntity;
 import ch.heig.menus.api.exceptions.DishNotFoundException;
 import ch.heig.menus.api.repositories.DishRepository;
 import org.openapitools.api.DishesApi;
-import org.openapitools.model.Dish;
+import org.openapitools.model.DishDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +24,11 @@ public class DishesEndPoint implements DishesApi {
     private DishRepository dishRepository;
 
     @Override
-    public ResponseEntity<List<Dish>> getDishes() {
+    public ResponseEntity<List<DishDTO>> getDishes() {
         List<DishEntity> quoteEntities= dishRepository.findAll();
-        List<Dish> dishes = new ArrayList<>();
+        List<DishDTO> dishes = new ArrayList<>();
         for (DishEntity dishEntity : quoteEntities) {
-            Dish dish = new Dish();
+            DishDTO dish = new DishDTO();
             dish.setId(dishEntity.getId());
             dish.setName(dishEntity.getName());
             dishes.add(dish);
@@ -37,7 +37,7 @@ public class DishesEndPoint implements DishesApi {
     }
 
     @Override
-    public ResponseEntity<Void> addDish(@RequestBody Dish chef) {
+    public ResponseEntity<Void> addDish(@RequestBody DishDTO chef) {
         DishEntity dishEntity = new DishEntity();
         dishEntity.setName(chef.getName());
         DishEntity quoteAdded = dishRepository.save(dishEntity);
@@ -50,11 +50,11 @@ public class DishesEndPoint implements DishesApi {
     }
 
     @Override
-    public ResponseEntity<Dish> getDish(Integer id) {
+    public ResponseEntity<DishDTO> getDish(Integer id) {
         Optional<DishEntity> opt = dishRepository.findById(id);
         if (opt.isPresent()) {
             DishEntity chefEntity = opt.get();
-            Dish dish = new Dish();
+            DishDTO dish = new DishDTO();
             dish.setId(chefEntity.getId());
             dish.setName(chefEntity.getName());
             return new ResponseEntity<>(dish, HttpStatus.OK);
