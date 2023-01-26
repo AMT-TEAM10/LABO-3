@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class Swagger2SpringBoot implements CommandLineRunner {
 
+    public static void main(String[] args) throws Exception {
+        new SpringApplication(Swagger2SpringBoot.class).run(args);
+    }
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
@@ -20,10 +24,6 @@ public class Swagger2SpringBoot implements CommandLineRunner {
         if (arg0.length > 0 && arg0[0].equals("exitcode")) {
             throw new ExitException();
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        new SpringApplication(Swagger2SpringBoot.class).run(args);
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {
