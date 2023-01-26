@@ -1,6 +1,5 @@
 package ch.heig.menus.api.endpoints;
 
-import ch.heig.menus.api.exceptions.ChefNotFoundException;
 import ch.heig.menus.api.services.ChefsService;
 import org.openapitools.api.ChefsApi;
 import org.openapitools.model.ChefDTO;
@@ -29,41 +28,30 @@ public class ChefsEndPoint implements ChefsApi {
 
     @Override
     public ResponseEntity<ChefWithRelationsDTO> getChef(Integer id) {
-        try {
-            var chef = chefsService.get(id);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(chef.getId())
-                    .toUri();
-            return ResponseEntity.created(location).body(chef);
-        } catch (ChefNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(chefsService.get(id));
     }
 
     @Override
     public ResponseEntity<ChefDTO> updateChef(Integer id, ChefDTO chefDTO) {
-        try {
-            return ResponseEntity.ok(chefsService.update(id, chefDTO));
-        } catch (ChefNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(chefsService.update(id, chefDTO));
     }
 
     @Override
     public ResponseEntity<ChefDTO> createChef(ChefDTO chefDTO) {
         var chef = chefsService.create(chefDTO);
-        return ResponseEntity.created(URI.create("/chefs/" + chef.getId())).body(chef);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(chef.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(chef);
     }
 
     @Override
     public ResponseEntity<Void> deleteChef(Integer id) {
-        try {
-            chefsService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (ChefNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        chefsService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

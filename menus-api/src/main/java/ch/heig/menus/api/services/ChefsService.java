@@ -30,13 +30,13 @@ public class ChefsService {
     }
 
     public ChefWithRelationsDTO get(int id) throws ChefNotFoundException {
-        var chefEntity = chefRepository.findById(id);
-        return modelMapper.map(chefEntity, ChefWithRelationsDTO.class);
+        return chefRepository.findById(id)
+                .map(e -> modelMapper.map(e, ChefWithRelationsDTO.class))
+                .orElseThrow(() -> new ChefNotFoundException(id));
     }
 
     public ChefDTO create(ChefDTO chef) {
         var chefEntity = new ChefEntity();
-        chefEntity.setId(10);
         chefEntity.setName(chef.getName());
         chefEntity = chefRepository.save(chefEntity);
         return modelMapper.map(chefEntity, ChefDTO.class);

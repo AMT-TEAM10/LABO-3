@@ -7,7 +7,10 @@ import ch.heig.menus.api.exceptions.MenuNotFoundException;
 import ch.heig.menus.api.repositories.DishRepository;
 import ch.heig.menus.api.repositories.MenuRepository;
 import org.modelmapper.ModelMapper;
-import org.openapitools.model.*;
+import org.openapitools.model.DishType;
+import org.openapitools.model.DishWithRelationsDTO;
+import org.openapitools.model.MenuDTO;
+import org.openapitools.model.MenuWithRelationsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
