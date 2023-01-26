@@ -19,26 +19,6 @@ public class MenusService {
     private final DishRepository dishRepository;
     private final ModelMapper modelMapper;
 
-    private MenuWithRelationsDTO convertToDto(MenuEntity menuEntity) {
-        var menu = modelMapper.map(menuEntity, MenuWithRelationsDTO.class);
-        menu.setDessert(convertToDto(menuEntity.getDessert()));
-        menu.setMain(convertToDto(menuEntity.getMain()));
-        menu.setStarter(convertToDto(menuEntity.getStarter()));
-        return menu;
-    }
-
-    private DishWithRelationsDTO convertToDto(DishEntity dishEntity) {
-        var dish = modelMapper.map(dishEntity, DishWithRelationsDTO.class);
-        dish.setChefs(
-                dishEntity
-                        .getChefs()
-                        .stream()
-                        .map(chefEntity -> modelMapper.map(chefEntity, ChefDTO.class))
-                        .toList()
-        );
-        return dish;
-    }
-
     MenusService(@Autowired MenuRepository menuRepository, @Autowired ModelMapper modelMapper, @Autowired DishRepository dishRepository) {
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
@@ -49,7 +29,7 @@ public class MenusService {
         return menuRepository
                 .findAll()
                 .stream()
-                .map(this::convertToDto)
+                .map(e -> modelMapper.map(e, MenuWithRelationsDTO.class))
                 .toList();
     }
 

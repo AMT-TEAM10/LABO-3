@@ -6,7 +6,6 @@ import ch.heig.menus.api.repositories.ChefRepository;
 import org.modelmapper.ModelMapper;
 import org.openapitools.model.ChefDTO;
 import org.openapitools.model.ChefWithRelationsDTO;
-import org.openapitools.model.DishDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +16,6 @@ public class ChefsService {
     private final ChefRepository chefRepository;
     private final ModelMapper modelMapper;
 
-    private ChefWithRelationsDTO convertToDto(ChefEntity chefEntity) {
-        var chef = modelMapper.map(chefEntity, ChefWithRelationsDTO.class);
-        chef.setDishes(
-                chefEntity
-                        .getDishes()
-                        .stream()
-                        .map(dishEntity -> modelMapper.map(dishEntity, DishDTO.class))
-                        .toList()
-        );
-        return chef;
-    }
-
     ChefsService(@Autowired ChefRepository chefRepository, @Autowired ModelMapper modelMapper) {
         this.chefRepository = chefRepository;
         this.modelMapper = modelMapper;
@@ -38,7 +25,7 @@ public class ChefsService {
         return chefRepository
                 .findAll()
                 .stream()
-                .map(this::convertToDto)
+                .map(e -> modelMapper.map(e, ChefWithRelationsDTO.class))
                 .toList();
     }
 
