@@ -1,30 +1,74 @@
 package ch.heig.menus.api.endpoints;
 
-import ch.heig.menus.api.entities.ChefEntity;
-import ch.heig.menus.api.entities.DishEntity;
 import ch.heig.menus.api.exceptions.DishNotFoundException;
-import ch.heig.menus.api.repositories.DishRepository;
-import org.modelmapper.ModelMapper;
+import ch.heig.menus.api.services.DishesService;
 import org.openapitools.api.DishesApi;
-import org.openapitools.model.ChefDTO;
 import org.openapitools.model.DishDTO;
+import org.openapitools.model.DishWithRelationsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class DishesEndPoint implements DishesApi {
 
-    @Autowired
-    private DishRepository dishRepository;
+    private final DishesService dishesService;
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    DishesEndPoint(@Autowired DishesService dishesService) {
+        this.dishesService = dishesService;
+    }
+
+    @Override
+    public ResponseEntity<List<DishWithRelationsDTO>> getDishes() {
+        return ResponseEntity.ok(dishesService.getAll());
+    }
+
+    @Override
+    public ResponseEntity<DishWithRelationsDTO> getDish(Integer id) {
+        try {
+            DishWithRelationsDTO dish = dishesService.get(id);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(dish.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(dish);
+        } catch (DishNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<DishDTO> createDish(DishDTO dishDTO) {
+        DishDTO dish = dishesService.create(dishDTO);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(dish.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(dish);
+    }
+
+    @Override
+    public ResponseEntity<DishDTO> updateDish(Integer id, DishDTO dishDTO) {
+        try {
+            return ResponseEntity.ok(dishesService.update(id, dishDTO));
+        } catch (DishNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteDish(Integer id) {
+        try {
+            dishesService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (DishNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
