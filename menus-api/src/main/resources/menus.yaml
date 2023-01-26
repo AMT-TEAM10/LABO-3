@@ -138,12 +138,15 @@ paths:
       tags:
         - menus
       summary: Ajoute ou met à jour le plat du type demandé dans le menu
-      operationId: putStarter
+      operationId: addOrUpdateDishByType
       requestBody:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/DishDTO'
+              title: dishId
+              description: id du plat à ajouter ou mettre à jour
+              type: integer
+              format: int32
       responses:
         '201':
           description: plat d'entrée crée
@@ -153,7 +156,7 @@ paths:
       tags:
         - menus
       summary: Supprime le plat du type demandé du menu
-      operationId: deleteStarter
+      operationId: deleteDishByType
       responses:
         '204':
           description: OK
@@ -249,32 +252,6 @@ paths:
           description: OK
         '404':
           description: Not Found
-  /chefs/{id}/dishes:
-    parameters:
-      - name: id
-        in: path
-        description: numéro du chef
-        required: true
-        schema:
-          type: integer
-          format: int32
-    get:
-      tags:
-        - chefs
-      summary: Obtient les plats d'un chef
-      operationId: getChefDishes
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DishWithRelationsDTO'
-        '404':
-          description: Not Found
-      deprecated: false
 
   /dishes:
     get:

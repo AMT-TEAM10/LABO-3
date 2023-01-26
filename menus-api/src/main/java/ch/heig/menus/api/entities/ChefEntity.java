@@ -1,11 +1,19 @@
 package ch.heig.menus.api.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity()
 @Table(name = "chef")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChefEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,28 +24,4 @@ public class ChefEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<DishEntity> dishes;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<DishEntity> getDishes() {
-        return dishes;
-    }
-
-    public void setDishes(List<DishEntity> dishes) {
-        this.dishes = dishes;
-    }
 }

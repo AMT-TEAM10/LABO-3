@@ -1,93 +1,100 @@
 package ch.heig.menus.api.endpoints;
 
-import ch.heig.menus.api.entities.ChefEntity;
-import ch.heig.menus.api.entities.DishEntity;
-import ch.heig.menus.api.entities.MenuEntity;
 import ch.heig.menus.api.exceptions.MenuNotFoundException;
-import org.modelmapper.ModelMapper;
+import ch.heig.menus.api.services.MenusService;
 import org.openapitools.api.MenusApi;
-import ch.heig.menus.api.repositories.MenuRepository;
 import org.openapitools.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class MenusEndPoint implements MenusApi {
 
-    @Autowired
-    private MenuRepository menuRepository;
+    private final MenusService menusService;
 
-
-    private final ModelMapper modelMapper = new ModelMapper();
-
-    private MenuWithRelationsDTO convertToDto(MenuEntity menuEntity) {
-        var menu = modelMapper.map(menuEntity, MenuWithRelationsDTO.class);
-        menu.setDessert(convertToDto(menuEntity.getDessert()));
-        menu.setMain(convertToDto(menuEntity.getMain()));
-        menu.setStarter(convertToDto(menuEntity.getStarter()));
-        return menu;
-    }
-
-    private DishWithRelationsDTO convertToDto(DishEntity dishEntity) {
-        var dish = modelMapper.map(dishEntity, DishWithRelationsDTO.class);
-        var chefs = dishEntity.getChefs().stream().map(this::convertToDto).toList();
-        dish.setChefs(chefs);
-        return dish;
-    }
-
-    private ChefDTO convertToDto(ChefEntity chefEntity) {
-        return modelMapper.map(chefEntity, ChefDTO.class);
+    MenusEndPoint(@Autowired MenusService menusService) {
+        this.menusService = menusService;
     }
 
     @Override
     public ResponseEntity<List<MenuWithRelationsDTO>> getMenus() {
-        List<MenuEntity> menusEntities = menuRepository.findAll();
-        List<MenuWithRelationsDTO> menus = menusEntities.stream().map(this::convertToDto).toList();
-        return new ResponseEntity<>(menus, HttpStatus.OK);
+        return new ResponseEntity<>(menusService.getAll(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<MenuWithRelationsDTO> getMenu(Integer id) {
-        Optional<MenuEntity> opt = menuRepository.findById(id);
-        if (opt.isPresent()) {
-            MenuEntity menuEntity = opt.get();
-            MenuWithRelationsDTO menu = convertToDto(menuEntity);
-            return new ResponseEntity<>(menu, HttpStatus.OK);
-        } else {
-            throw new MenuNotFoundException(id);
+        try {
+            var menu = menusService.get(id);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(menu.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body(menu);
+        } catch (MenuNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     public ResponseEntity<MenuWithRelationsDTO> createMenu(MenuDTO menuDTO) {
-        MenuEntity menuEntity = modelMapper.map(menuDTO, MenuEntity.class);
-        menuEntity = menuRepository.save(menuEntity);
-        MenuWithRelationsDTO menu = convertToDto(menuEntity);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(menu.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(menu);
+        var menu = menusService.create(menuDTO);
+        return new ResponseEntity<>(menu, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<Void> deleteMenu(Integer id) {
-        Optional<MenuEntity> opt = menuRepository.findById(id);
-        if (opt.isPresent()) {
-            menuRepository.deleteById(id);
+        try {
+            menusService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            throw new MenuNotFoundException(id);
+        } catch (MenuNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity<MenuDTO> updateMenu(Integer id, MenuDTO menuDTO) {
+        try {
+            var menu = menusService.update(id, menuDTO);
+            return new ResponseEntity<>(menu, HttpStatus.OK);
+        } catch (MenuNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity<DishWithRelationsDTO> getDishByType(Integer id, DishType dishType) {
+        try {
+            var dish = menusService.getDish(id, dishType);
+            return new ResponseEntity<>(dish, HttpStatus.OK);
+        } catch (MenuNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Void> addOrUpdateDishByType(Integer id, DishType dishType, Integer dishId) {
+        try {
+            menusService.updateDish(id, dishId, dishType);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (MenuNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteDishByType(Integer id, DishType dishType) {
+        try {
+            menusService.removeDish(id, dishType);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (MenuNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -12,6 +12,7 @@ public class OpenApiDocumentationConfig {
 
     @Bean
     public OpenAPI springQuotesOpenAPI() {
+        // enumPropertyNaming
         return new OpenAPI()
                 .info(new Info().title("Menu API")
                         .description("Menus sample application")
