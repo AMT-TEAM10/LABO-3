@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ChefSteps {
     private final ChefsApi api = new ChefsApi();
     private ChefDTO chef;
+
     private int statusCode;
 
     @Given("I have an chef payload")
@@ -34,5 +35,16 @@ public class ChefSteps {
     @Then("I receive a {int} status code")
     public void i_receive_a_status_code(int arg1) throws Throwable {
         assertEquals(arg1, statusCode);
+    }
+
+    @When("I PUT it to the chefs endpoint")
+    public void i_PUT_It_To_The_Chefs_Endpoint() {
+        try {
+            var response = api.updateChefWithHttpInfo(chef.getId(), chef);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            e.printStackTrace();
+            statusCode = e.getCode();
+        }
     }
 }

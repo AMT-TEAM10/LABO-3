@@ -3,6 +3,7 @@ package ch.heig.menus.api.endpoints;
 import ch.heig.menus.api.exceptions.DishNotFoundException;
 import ch.heig.menus.api.services.DishesService;
 import org.openapitools.api.DishesApi;
+import org.openapitools.model.ChefDTO;
 import org.openapitools.model.DishDTO;
 import org.openapitools.model.DishWithRelationsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,9 @@ public class DishesEndPoint implements DishesApi {
         DishDTO dish = dishesService.create(dishDTO);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(dish.getId())
+                .path("/{id}").buildAndExpand(dish.getId())
                 .toUri();
+
         return ResponseEntity.created(location).body(dish);
     }
 
@@ -71,4 +72,35 @@ public class DishesEndPoint implements DishesApi {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Override
+    public ResponseEntity<List<ChefDTO>> getChefsByDish(Integer id) {
+        try {
+            return ResponseEntity.ok(dishesService.get(id).getChefs());
+        } catch (DishNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<Void> putChefByDish(Integer id, ChefDTO chefDTO) {
+        try {
+            dishesService.addChefToDish(id, chefDTO);
+            return ResponseEntity.noContent().build();
+        } catch (DishNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+//    @Override
+//    public ResponseEntity<Void> deleteChefByDish(Integer id, Integer chefId) {
+//        try {
+//            dishesService.removeChefFromDish(id, chefId);
+//            return ResponseEntity.noContent().build();
+//        } catch (DishNotFoundException e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+
 }

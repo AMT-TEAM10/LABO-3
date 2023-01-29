@@ -281,12 +281,10 @@ paths:
       responses:
         '201':
           description: plat créé
-          headers:
-            Location:
-              description: URL du plat créé
+          content:
+            'application/json':
               schema:
-                type: string
-                format: uri
+                $ref: '#/components/schemas/DishDTO'
   /dishes/{id}:
     parameters:
       - name: id
