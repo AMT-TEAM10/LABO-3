@@ -27,13 +27,7 @@ public class DishesEndPoint implements DishesApi {
 
     @Override
     public ResponseEntity<DishWithRelationsDTO> getDish(Integer id) {
-        DishWithRelationsDTO dish = dishesService.get(id);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(dish.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(dish);
+        return ResponseEntity.ok(dishesService.get(id));
     }
 
     @Override
