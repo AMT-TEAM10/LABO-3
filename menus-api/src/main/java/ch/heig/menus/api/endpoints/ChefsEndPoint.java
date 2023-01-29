@@ -1,10 +1,11 @@
 package ch.heig.menus.api.endpoints;
 
 import ch.heig.menus.api.services.ChefsService;
+import lombok.RequiredArgsConstructor;
 import org.openapitools.api.ChefsApi;
 import org.openapitools.model.ChefDTO;
+import org.openapitools.model.ChefWithIdDTO;
 import org.openapitools.model.ChefWithRelationsDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,13 +14,10 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class ChefsEndPoint implements ChefsApi {
 
     private final ChefsService chefsService;
-
-    ChefsEndPoint(@Autowired ChefsService chefsService) {
-        this.chefsService = chefsService;
-    }
 
     @Override
     public ResponseEntity<List<ChefWithRelationsDTO>> getChefs() {
@@ -32,12 +30,12 @@ public class ChefsEndPoint implements ChefsApi {
     }
 
     @Override
-    public ResponseEntity<ChefDTO> updateChef(Integer id, ChefDTO chefDTO) {
+    public ResponseEntity<ChefWithIdDTO> updateChef(Integer id, ChefDTO chefDTO) {
         return ResponseEntity.ok(chefsService.update(id, chefDTO));
     }
 
     @Override
-    public ResponseEntity<ChefDTO> createChef(ChefDTO chefDTO) {
+    public ResponseEntity<ChefWithIdDTO> createChef(ChefDTO chefDTO) {
         var chef = chefsService.create(chefDTO);
 
         URI location = ServletUriComponentsBuilder

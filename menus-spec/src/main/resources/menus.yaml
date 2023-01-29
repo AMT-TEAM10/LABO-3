@@ -72,7 +72,6 @@ paths:
                 $ref: '#/components/schemas/MenuWithRelationsDTO'
         '404':
           description: Not Found
-      deprecated: false
     put:
       tags:
         - menus
@@ -89,7 +88,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/MenuDTO'
+                $ref: '#/components/schemas/MenuWithIdDTO'
         '400':
           description: Bad Request
         '404':
@@ -194,7 +193,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/ChefDTO'
+                $ref: '#/components/schemas/ChefWithIdDTO'
         '400':
           description: Bad Request
   /chefs/{id}:
@@ -237,7 +236,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/ChefDTO'
+                $ref: '#/components/schemas/ChefWithIdDTO'
         '400':
           description: Bad Request
         '404':
@@ -284,7 +283,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/DishDTO'
+                $ref: '#/components/schemas/DishWithIdDTO'
   /dishes/{id}:
     parameters:
       - name: id
@@ -325,7 +324,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/DishDTO'
+                $ref: '#/components/schemas/DishWithIdDTO'
         '400':
           description: Bad Request
         '404':
@@ -363,7 +362,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ChefDTO'
+                  $ref: '#/components/schemas/ChefWithIdDTO'
         '404':
           description: Not Found
       deprecated: false
@@ -376,7 +375,10 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/ChefDTO'
+              title: chefId
+              description: numéro du chef
+              type: integer
+              format: int32
       responses:
         '204':
           description: chef ajouté
@@ -428,10 +430,6 @@ components:
       description: toutes les informations d'un plat
       type: object
       properties:
-        id:
-          description: numéro auto-incrémenté du plat
-          type: integer
-          format: int32
         name:
           description: nom du plat
           type: string
@@ -440,11 +438,6 @@ components:
       description: toutes les caractéristiques d'un menu
       type: object
       properties:
-        id:
-          description: numéro auto-incrémenté du menu
-          type: integer
-          format: int32
-          readOnly: true
         name:
           description: nom du menu
           type: string
@@ -453,30 +446,59 @@ components:
       description: toutes les caractéristiques d'un chef
       type: object
       properties:
-        id:
-          description: numéro auto-incrémenté du chef
-          type: integer
-          format: int32
         name:
           description: nom du chef
           type: string
+    DishWithIdDTO:
+      title: DishDTO with id
+      description: toutes les informations d'un plat avec son id
+      allOf:
+        - $ref: '#/components/schemas/DishDTO'
+        - type: object
+          properties:
+            id:
+              description: numéro auto-incrémenté du plat
+              type: integer
+              format: int32
+    MenuWithIdDTO:
+      title: MenuDTO with id
+      description: toutes les caractéristiques d'un menu avec son id
+      allOf:
+        - $ref: '#/components/schemas/MenuDTO'
+        - type: object
+          properties:
+            id:
+              description: numéro auto-incrémenté du menu
+              type: integer
+              format: int32
+    ChefWithIdDTO:
+      title: ChefDTO with id
+      description: toutes les caractéristiques d'un chef avec son id
+      allOf:
+        - $ref: '#/components/schemas/ChefDTO'
+        - type: object
+          properties:
+            id:
+              description: numéro auto-incrémenté du chef
+              type: integer
+              format: int32
     DishWithRelationsDTO:
       title: DishDTO with relations
       description: toutes les informations d'un plat avec les chefs qui le préparent
       allOf:
-        - $ref: '#/components/schemas/DishDTO'
+        - $ref: '#/components/schemas/DishWithIdDTO'
         - type: object
           properties:
             chefs:
               description: liste des chefs qui ont préparé ce plat
               type: array
               items:
-                $ref: '#/components/schemas/ChefDTO'
+                $ref: '#/components/schemas/ChefWithIdDTO'
     MenuWithRelationsDTO:
       title: MenuDTO with relations
       description: toutes les caractéristiques d'un menu avec les plats qui le composent
       allOf:
-        - $ref: '#/components/schemas/MenuDTO'
+        - $ref: '#/components/schemas/MenuWithIdDTO'
         - type: object
           properties:
             starter:
@@ -489,11 +511,11 @@ components:
       title: ChefDTO with relations
       description: toutes les caractéristiques d'un chef avec les plats qu'il prépare
       allOf:
-        - $ref: '#/components/schemas/ChefDTO'
+        - $ref: '#/components/schemas/ChefWithIdDTO'
         - type: object
       properties:
         dishes:
           description: liste des plats préparés par ce chef
           type: array
           items:
-            $ref: '#/components/schemas/DishDTO'
+            $ref: '#/components/schemas/DishWithIdDTO'

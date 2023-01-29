@@ -2,18 +2,20 @@ package ch.heig.menus.api.services;
 
 import ch.heig.menus.api.entities.ChefEntity;
 import ch.heig.menus.api.entities.DishEntity;
+import ch.heig.menus.api.exceptions.BadRequestException;
 import ch.heig.menus.api.exceptions.ChefNotFoundException;
 import ch.heig.menus.api.exceptions.DishNotFoundException;
 import ch.heig.menus.api.repositories.ChefRepository;
 import ch.heig.menus.api.repositories.DishRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.openapitools.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DishesService {
     private final DishRepository dishRepository;
 
@@ -21,29 +23,11 @@ public class DishesService {
 
     private final ModelMapper modelMapper;
 
-    public DishesService(@Autowired DishRepository dishRepository, @Autowired ChefRepository chefRepository, @Autowired ModelMapper modelMapper) {
-        this.dishRepository = dishRepository;
-        this.chefRepository = chefRepository;
-        this.modelMapper = modelMapper;
-    }
-
-    private DishWithRelationsDTO convertToDto(DishEntity dishEntity) {
-        var dish = modelMapper.map(dishEntity, DishWithRelationsDTO.class);
-        dish.setChefs(
-                dishEntity
-                        .getChefs()
-                        .stream()
-                        .map(chefEntity -> modelMapper.map(chefEntity, ChefDTO.class))
-                        .toList()
-        );
-        return dish;
-    }
-
     public List<DishWithRelationsDTO> getAll() {
         return dishRepository
                 .findAll()
                 .stream()
-                .map(this::convertToDto)
+                .map(e -> modelMapper.map(e, DishWithRelationsDTO.class))
                 .toList();
     }
 
@@ -52,18 +36,36 @@ public class DishesService {
         return modelMapper.map(dishEntity, DishWithRelationsDTO.class);
     }
 
-    public DishDTO create(DishDTO dish) {
+    public DishWithIdDTO create(DishDTO dish) {
+        if(dish == null) {
+            throw new BadRequestException("Dish is required");
+        }
+
         DishEntity dishEntity = new DishEntity();
+        if (dish.getName() == null) {
+            throw new BadRequestException("Name is required");
+        }
         dishEntity.setName(dish.getName());
-        dishEntity = dishRepository.save(dishEntity);
-        return modelMapper.map(dishEntity, DishDTO.class);
+        return modelMapper.map(
+                dishRepository.save(dishEntity),
+                DishWithIdDTO.class
+        );
     }
 
-    public DishDTO update(int id, DishDTO dish) throws DishNotFoundException {
+    public DishWithIdDTO update(int id, DishDTO dish) throws DishNotFoundException {
+        if(dish == null) {
+            throw new BadRequestException("Dish is required");
+        }
+
         var dishEntity = dishRepository.findById(id).orElseThrow(() -> new DishNotFoundException(id));
+        if (dish.getName() == null) {
+            throw new BadRequestException("Name is required");
+        }
         dishEntity.setName(dish.getName());
-        dishEntity = dishRepository.save(dishEntity);
-        return modelMapper.map(dishEntity, DishDTO.class);
+        return modelMapper.map(
+                dishRepository.save(dishEntity),
+                DishWithIdDTO.class
+        );
     }
 
     public void delete(int id) throws DishNotFoundException {
@@ -74,9 +76,9 @@ public class DishesService {
         dishRepository.delete(dishEntity);
     }
 
-    public DishWithRelationsDTO addChefToDish(int idDish, ChefDTO chef) throws DishNotFoundException, ChefNotFoundException {
+    public DishWithRelationsDTO addChefToDish(int idDish, int chefId) throws DishNotFoundException, ChefNotFoundException {
         DishEntity dishEntity = dishRepository.findById(idDish).orElseThrow(() -> new DishNotFoundException(idDish));
-        ChefEntity chefEntity = chefRepository.findById(chef.getId()).orElseThrow(() -> new DishNotFoundException(chef.getId()));
+        ChefEntity chefEntity = chefRepository.findById(chefId).orElseThrow(() -> new ChefNotFoundException(chefId));
         dishEntity.addChef(chefEntity);
         dishRepository.save(dishEntity);
         return modelMapper.map(dishEntity, DishWithRelationsDTO.class);

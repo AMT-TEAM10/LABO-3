@@ -1,12 +1,9 @@
 package ch.heig.menus.api.endpoints;
 
 import ch.heig.menus.api.services.MenusService;
+import lombok.RequiredArgsConstructor;
 import org.openapitools.api.MenusApi;
-import org.openapitools.model.DishType;
-import org.openapitools.model.DishWithRelationsDTO;
-import org.openapitools.model.MenuDTO;
-import org.openapitools.model.MenuWithRelationsDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openapitools.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,13 +12,10 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class MenusEndPoint implements MenusApi {
 
     private final MenusService menusService;
-
-    MenusEndPoint(@Autowired MenusService menusService) {
-        this.menusService = menusService;
-    }
 
     @Override
     public ResponseEntity<List<MenuWithRelationsDTO>> getMenus() {
@@ -53,7 +47,7 @@ public class MenusEndPoint implements MenusApi {
     }
 
     @Override
-    public ResponseEntity<MenuDTO> updateMenu(Integer id, MenuDTO menuDTO) {
+    public ResponseEntity<MenuWithIdDTO> updateMenu(Integer id, MenuDTO menuDTO) {
         return ResponseEntity.ok(menusService.update(id, menuDTO));
     }
 
