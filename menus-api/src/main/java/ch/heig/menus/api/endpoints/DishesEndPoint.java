@@ -1,6 +1,5 @@
 package ch.heig.menus.api.endpoints;
 
-import ch.heig.menus.api.exceptions.DishNotFoundException;
 import ch.heig.menus.api.services.DishesService;
 import org.openapitools.api.DishesApi;
 import org.openapitools.model.ChefDTO;
@@ -30,17 +29,13 @@ public class DishesEndPoint implements DishesApi {
 
     @Override
     public ResponseEntity<DishWithRelationsDTO> getDish(Integer id) {
-        try {
-            DishWithRelationsDTO dish = dishesService.get(id);
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(dish.getId())
-                    .toUri();
-            return ResponseEntity.created(location).body(dish);
-        } catch (DishNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        DishWithRelationsDTO dish = dishesService.get(id);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(dish.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(dish);
     }
 
     @Override
@@ -56,51 +51,28 @@ public class DishesEndPoint implements DishesApi {
 
     @Override
     public ResponseEntity<DishDTO> updateDish(Integer id, DishDTO dishDTO) {
-        try {
-            return ResponseEntity.ok(dishesService.update(id, dishDTO));
-        } catch (DishNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(dishesService.update(id, dishDTO));
     }
 
     @Override
     public ResponseEntity<Void> deleteDish(Integer id) {
-        try {
-            dishesService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (DishNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        dishesService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     public ResponseEntity<List<ChefDTO>> getChefsByDish(Integer id) {
-        try {
-            return ResponseEntity.ok(dishesService.get(id).getChefs());
-        } catch (DishNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(dishesService.get(id).getChefs());
     }
 
     @Override
-    public ResponseEntity<Void> putChefByDish(Integer id, ChefDTO chefDTO) {
-        try {
-            dishesService.addChefToDish(id, chefDTO);
-            return ResponseEntity.noContent().build();
-        } catch (DishNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<DishWithRelationsDTO> putChefByDish(Integer id, ChefDTO chefDTO) {
+        return ResponseEntity.ok(dishesService.addChefToDish(id, chefDTO));
     }
 
-
-//    @Override
-//    public ResponseEntity<Void> deleteChefByDish(Integer id, Integer chefId) {
-//        try {
-//            dishesService.removeChefFromDish(id, chefId);
-//            return ResponseEntity.noContent().build();
-//        } catch (DishNotFoundException e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
+    @Override
+    public ResponseEntity<Void> deleteChefByDish(Integer id, Integer chefId) {
+        dishesService.removeChefFromDish(id, chefId);
+        return ResponseEntity.noContent().build();
+    }
 }

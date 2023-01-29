@@ -378,17 +378,30 @@ paths:
             schema:
               $ref: '#/components/schemas/ChefDTO'
       responses:
-        '201':
-          description: chef créé
-          headers:
-            Location:
-              description: URL du chef créé
-              schema:
-                type: string
-                format: uri
         '204':
-          description: chef mis à jour
+          description: chef ajouté
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/DishWithRelationsDTO'
+
+  /dishes/{id}/chefs/{chefId}:
     delete:
+      parameters:
+        - name: id
+          in: path
+          description: numéro du menu
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: chefId
+          in: path
+          description: numéro du menu
+          required: true
+          schema:
+            type: integer
+            format: int32
       tags:
         - dishes
       summary: Supprime un chef qui a préparé ce plat
@@ -398,6 +411,7 @@ paths:
           description: OK
         '404':
           description: Not Found
+
 
 components:
   schemas:

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity()
 @Table(name = "chef")
@@ -23,5 +23,5 @@ public class ChefEntity {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<DishEntity> dishes;
+    private Set<DishEntity> dishes;
 }

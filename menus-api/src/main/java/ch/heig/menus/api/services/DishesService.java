@@ -4,6 +4,7 @@ import ch.heig.menus.api.entities.ChefEntity;
 import ch.heig.menus.api.entities.DishEntity;
 import ch.heig.menus.api.exceptions.ChefNotFoundException;
 import ch.heig.menus.api.exceptions.DishNotFoundException;
+import ch.heig.menus.api.repositories.ChefRepository;
 import ch.heig.menus.api.repositories.DishRepository;
 import org.modelmapper.ModelMapper;
 import org.openapitools.model.*;
@@ -16,10 +17,13 @@ import java.util.List;
 public class DishesService {
     private final DishRepository dishRepository;
 
+    private final ChefRepository chefRepository;
+
     private final ModelMapper modelMapper;
 
-    public DishesService(@Autowired DishRepository dishRepository, @Autowired ModelMapper modelMapper) {
+    public DishesService(@Autowired DishRepository dishRepository, @Autowired ChefRepository chefRepository, @Autowired ModelMapper modelMapper) {
         this.dishRepository = dishRepository;
+        this.chefRepository = chefRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -70,19 +74,18 @@ public class DishesService {
         dishRepository.delete(dishEntity);
     }
 
-    public void addChefToDish(int idChef, ChefDTO chef) throws DishNotFoundException, ChefNotFoundException {
-        var dishEntity = dishRepository.findById(idChef).orElseThrow(() -> new DishNotFoundException(idChef));
-        var chefEntity = new ChefEntity();
-        chefEntity.setId(chef.getId());
-        chefEntity.setName(chef.getName());
-        dishEntity.getChefs().add(chefEntity);
+    public DishWithRelationsDTO addChefToDish(int idDish, ChefDTO chef) throws DishNotFoundException, ChefNotFoundException {
+        DishEntity dishEntity = dishRepository.findById(idDish).orElseThrow(() -> new DishNotFoundException(idDish));
+        ChefEntity chefEntity = chefRepository.findById(chef.getId()).orElseThrow(() -> new DishNotFoundException(chef.getId()));
+        dishEntity.addChef(chefEntity);
         dishRepository.save(dishEntity);
+        return modelMapper.map(dishEntity, DishWithRelationsDTO.class);
     }
 
-    public void removeChefFromDish(int idChef, int idDish) throws DishNotFoundException, ChefNotFoundException {
+    public void removeChefFromDish(int idDish, int idChef) throws DishNotFoundException, ChefNotFoundException {
         var dishEntity = dishRepository.findById(idDish).orElseThrow(() -> new DishNotFoundException(idDish));
         var chefEntity = dishEntity.getChefs().stream().filter(chef -> chef.getId() == idChef).findFirst().orElseThrow(() -> new ChefNotFoundException(idChef));
-        dishEntity.getChefs().remove(chefEntity);
+        dishEntity.removeChef(chefEntity);
         dishRepository.save(dishEntity);
     }
 }
