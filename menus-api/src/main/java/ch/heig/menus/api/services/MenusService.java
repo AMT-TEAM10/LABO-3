@@ -43,7 +43,8 @@ public class MenusService {
 
     public MenuWithRelationsDTO create(MenuDTO menu) {
         var menuEntity = new MenuEntity();
-        menu.setName(menu.getName());
+        menuEntity.setName(menu.getName());
+        menuEntity = menuRepository.save(menuEntity);
         return modelMapper.map(menuEntity, MenuWithRelationsDTO.class);
     }
 

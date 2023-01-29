@@ -1,5 +1,6 @@
 package ch.heig.menus.api.entities;
 
+import ch.heig.menus.api.services.DishesService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +25,12 @@ public class ChefEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<DishEntity> dishes;
+
+    public void addDish(DishEntity dish) {
+        dishes.add(dish);
+    }
+
+    public void removeDish(DishEntity dish) {
+        dishes.remove(dish);
+    }
 }

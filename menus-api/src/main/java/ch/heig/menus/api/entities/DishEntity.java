@@ -26,11 +26,11 @@ public class DishEntity {
 
     public void addChef(ChefEntity chef) {
         chefs.add(chef);
-        chef.getDishes().add(this);
+        chef.addDish(this);
     }
 
     public void removeChef(ChefEntity chef) {
         chefs.remove(chef);
-        chef.getDishes().remove(this);
+        chef.removeDish(this);
     }
 }

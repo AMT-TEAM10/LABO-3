@@ -69,7 +69,7 @@ public class DishesService {
     public void delete(int id) throws DishNotFoundException {
         var dishEntity = dishRepository.findById(id).orElseThrow(() -> new DishNotFoundException(id));
         for (ChefEntity chefEntity : dishEntity.getChefs()) {
-            chefEntity.getDishes().remove(dishEntity);
+            chefEntity.removeDish(dishEntity);
         }
         dishRepository.delete(dishEntity);
     }
