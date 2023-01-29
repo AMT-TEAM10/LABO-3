@@ -14,14 +14,15 @@ public class DishSteps {
     private final DishesApi api = new DishesApi();
 
     private DishDTO dish;
+    private int dishId;
 
     private int statusCode;
 
-    @Given("I have an dish payload")
-    public void iHaveAnDishPayload() {
+    @Given("I have an dish payload with id {int}")
+    public void iHaveAnDishPayload(int id) {
         dish = new DishDTO();
-        dish.setId(10);
         dish.setName("Goulash");
+        dishId = id;
     }
 
     @When("I POST it to the dishes endpoint")
@@ -40,7 +41,7 @@ public class DishSteps {
     public void iPUTItToTheDishesEndpoint() {
         // iPOSTItToTheDishesEndpoint();
         try {
-            var response = api.updateDishWithHttpInfo(dish.getId(), dish);
+            var response = api.updateDishWithHttpInfo(dishId, dish);
             statusCode = response.getStatusCode();
         } catch (ApiException e) {
             e.printStackTrace();
@@ -51,7 +52,7 @@ public class DishSteps {
     @When("I DELETE it to the dishes endpoint")
     public void iDELETEItToTheDishesEndpoint() {
         try {
-            var response = api.deleteDishWithHttpInfo(dish.getId());
+            var response = api.deleteDishWithHttpInfo(dishId);
             statusCode = response.getStatusCode();
         } catch (ApiException e) {
             e.printStackTrace();

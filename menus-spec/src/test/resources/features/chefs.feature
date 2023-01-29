@@ -3,4 +3,3 @@ Feature: Application chefs
     Given I have an chef payload
     When I POST it to the chefs endpoint
     Then I receive a 201 status code
-
