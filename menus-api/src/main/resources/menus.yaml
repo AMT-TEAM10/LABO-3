@@ -461,27 +461,27 @@ components:
               type: integer
               format: int32
     MenuWithIdDTO:
-        title: MenuDTO with id
-        description: toutes les caractéristiques d'un menu avec son id
-        allOf:
-            - $ref: '#/components/schemas/MenuDTO'
-            - type: object
-              properties:
-                  id:
-                    description: numéro auto-incrémenté du menu
-                    type: integer
-                    format: int32
+      title: MenuDTO with id
+      description: toutes les caractéristiques d'un menu avec son id
+      allOf:
+        - $ref: '#/components/schemas/MenuDTO'
+        - type: object
+          properties:
+            id:
+              description: numéro auto-incrémenté du menu
+              type: integer
+              format: int32
     ChefWithIdDTO:
-        title: ChefDTO with id
-        description: toutes les caractéristiques d'un chef avec son id
-        allOf:
-            - $ref: '#/components/schemas/ChefDTO'
-            - type: object
-              properties:
-                id:
-                  description: numéro auto-incrémenté du chef
-                  type: integer
-                  format: int32
+      title: ChefDTO with id
+      description: toutes les caractéristiques d'un chef avec son id
+      allOf:
+        - $ref: '#/components/schemas/ChefDTO'
+        - type: object
+          properties:
+            id:
+              description: numéro auto-incrémenté du chef
+              type: integer
+              format: int32
     DishWithRelationsDTO:
       title: DishDTO with relations
       description: toutes les informations d'un plat avec les chefs qui le préparent

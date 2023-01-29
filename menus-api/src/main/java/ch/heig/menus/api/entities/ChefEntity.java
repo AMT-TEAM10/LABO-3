@@ -1,6 +1,5 @@
 package ch.heig.menus.api.entities;
 
-import ch.heig.menus.api.services.DishesService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

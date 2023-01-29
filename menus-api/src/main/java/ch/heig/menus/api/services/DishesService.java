@@ -9,7 +9,9 @@ import ch.heig.menus.api.repositories.ChefRepository;
 import ch.heig.menus.api.repositories.DishRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.openapitools.model.*;
+import org.openapitools.model.DishDTO;
+import org.openapitools.model.DishWithIdDTO;
+import org.openapitools.model.DishWithRelationsDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +39,7 @@ public class DishesService {
     }
 
     public DishWithIdDTO create(DishDTO dish) {
-        if(dish == null) {
+        if (dish == null) {
             throw new BadRequestException("Dish is required");
         }
 
@@ -53,7 +55,7 @@ public class DishesService {
     }
 
     public DishWithIdDTO update(int id, DishDTO dish) throws DishNotFoundException {
-        if(dish == null) {
+        if (dish == null) {
             throw new BadRequestException("Dish is required");
         }
 

@@ -1,4 +1,5 @@
 # API de gestion de menus
+> Nicolas Crausaz et Maxime Scharwath
 
 Le but de notre API est de permettre la maintenance d'un menu de la semaine pour un restaurant.
 Les actions possibles sont la création, l'édition et la suppression de menus.
@@ -7,6 +8,27 @@ Les actions possibles sont la création, l'édition et la suppression de menus.
 
 La documentation Swagger des endpoints de l'API est accessible ici: http://localhost:9090/api
 
+# UML
+
+Nous avons 3 entités principales: Menu, Plat et Chef.
+Un menu est composé de 3 plats ( entrée, plat principal et dessert) et un plat est réalisé par plusieurs chefs.
+
+```mermaid
+classDiagram
+    direction LR
+    
+    Menu "*" -- "3" Plat
+    Plat "*" -- "*" Chef
+   
+    Menu : int id
+    Menu : String nom
+    
+    Plat : int id
+    Plat : String nom
+    
+    Chef : int id
+    Chef : String nom
+```
 
 # Vidéo de présentation
 

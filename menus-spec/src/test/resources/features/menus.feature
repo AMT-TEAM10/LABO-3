@@ -6,6 +6,6 @@ Feature: Application menus
     Then the menu should be created with name '<answer>'
 
     Examples:
-      | menu | answer |
-      | "Test menu" | "Test menu" |
+      | menu          | answer        |
+      | "Test menu"   | "Test menu"   |
       | "Test menu 2" | "Test menu 2" |

@@ -35,12 +35,12 @@ public class MenusService {
     }
 
     public MenuWithRelationsDTO create(MenuDTO menu) {
-        if(menu == null) {
+        if (menu == null) {
             throw new BadRequestException("Menu is required");
         }
 
         var menuEntity = new MenuEntity();
-        if(menu.getName() == null) {
+        if (menu.getName() == null) {
             throw new BadRequestException("Name is required");
         }
         menuEntity.setName(menu.getName());
@@ -51,12 +51,12 @@ public class MenusService {
     }
 
     public MenuWithIdDTO update(int id, MenuDTO menu) throws MenuNotFoundException {
-        if(menu == null) {
+        if (menu == null) {
             throw new BadRequestException("Menu is required");
         }
 
         var menuEntity = menuRepository.findById(id).orElseThrow(() -> new MenuNotFoundException(id));
-        if(menu.getName() == null) {
+        if (menu.getName() == null) {
             throw new BadRequestException("Name is required");
         }
         menuEntity.setName(menu.getName());
