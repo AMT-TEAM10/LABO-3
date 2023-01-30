@@ -11,7 +11,7 @@ La documentation Swagger des endpoints de l'API est accessible ici: http://local
 # UML
 
 Nous avons 3 entités principales: Menu, Plat et Chef.
-Un menu est composé de 3 plats ( entrée, plat principal et dessert) et un plat est réalisé par plusieurs chefs.
+Un menu est composé de 3 plats (entrée, plat principal et dessert) et un plat est réalisé par plusieurs chefs.
 
 ```mermaid
 classDiagram

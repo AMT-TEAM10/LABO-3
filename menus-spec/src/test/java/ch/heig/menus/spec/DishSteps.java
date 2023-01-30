@@ -10,7 +10,6 @@ import org.openapitools.client.model.DishDTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DishSteps {
-
     private final DishesApi api = new DishesApi();
 
     private DishDTO dish;
@@ -18,11 +17,10 @@ public class DishSteps {
 
     private int statusCode;
 
-    @Given("I have an dish payload with id {int}")
-    public void iHaveAnDishPayload(int id) {
+    @Given("I have an dish payload")
+    public void iHaveAnDishPayload() {
         dish = new DishDTO();
         dish.setName("Goulash");
-        dishId = id;
     }
 
     @When("I POST it to the dishes endpoint")
@@ -30,6 +28,7 @@ public class DishSteps {
         try {
             var response = api.createDishWithHttpInfo(dish);
             statusCode = response.getStatusCode();
+            dishId = response.getData().getId();
         } catch (ApiException e) {
             e.printStackTrace();
             statusCode = e.getCode();
@@ -39,7 +38,7 @@ public class DishSteps {
 
     @When("I PUT it to the dishes endpoint")
     public void iPUTItToTheDishesEndpoint() {
-        // iPOSTItToTheDishesEndpoint();
+        iPOSTItToTheDishesEndpoint(); // Ensure that we have access to the dishId
         try {
             var response = api.updateDishWithHttpInfo(dishId, dish);
             statusCode = response.getStatusCode();
@@ -51,6 +50,7 @@ public class DishSteps {
 
     @When("I DELETE it to the dishes endpoint")
     public void iDELETEItToTheDishesEndpoint() {
+        iPOSTItToTheDishesEndpoint(); // Ensure that we have access to the dishId
         try {
             var response = api.deleteDishWithHttpInfo(dishId);
             statusCode = response.getStatusCode();
