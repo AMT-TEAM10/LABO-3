@@ -32,7 +32,7 @@ classDiagram
 
 # Vidéo de présentation
 
-Lien de la vidéo: TODO
+[Lien de la vidéo](https://www.youtube.com/watch?v=hMDEsRNvUXw)
 
 
 
